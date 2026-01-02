@@ -1,26 +1,74 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, dotfiles, ... }:
 
 {
   # ============================================
-  # Wayland session helpers (user scope)
+  # PACKAGES
   # ============================================
   home.packages = with pkgs; [
-    fuzzel
-    mako
-    wl-clipboard
-    cliphist
-    grim
-    slurp
-    wlr-randr
-    kanshi
-    swaybg
-    wlsunset
+    fuzzel mako swaylock-effects wl-clipboard cliphist
+    grim slurp wlr-randr kanshi swaybg wlsunset
   ];
 
-  programs.swaylock.enable = true;
+  # ============================================
+  # SWAYLOCK (manual only)
+  # ============================================
+  programs.swaylock = {
+    enable = true;
+    package = pkgs.swaylock-effects;
+    settings = {
+      color = "1a1b26";
+      font = "Inter";
+      font-size = 24;
+      clock = true;
+      timestr = "%H:%M";
+      datestr = "%A, %B %d";
+      indicator = true;
+      indicator-radius = 100;
+      indicator-thickness = 7;
+      ring-color = "7aa2f7";
+      key-hl-color = "7aa2f7";
+      text-color = "c0caf5";
+      effect-blur = "7x5";
+      fade-in = 0.2;
+      screenshots = true;
+      ignore-empty-password = true;
+      show-failed-attempts = true;
+    };
+  };
+
+  # No swayidle - no auto-lock
 
   # ============================================
-  # Wallpaper daemon (fallback/default)
+  # SERVICES
+  # ============================================
+  services.kanshi.enable = true;
+
+  services.wlsunset = {
+    enable = true;
+    latitude = "42.99";
+    longitude = "-71.45";
+    temperature = { day = 6500; night = 3500; };
+  };
+
+  services.mako = {
+    enable = true;
+    settings = {
+      font = "Inter 11";
+      width = 350;
+      height = 150;
+      margin = "10";
+      padding = "15";
+      "border-size" = 2;
+      "border-radius" = 10;
+      "background-color" = "#1a1b26";
+      "text-color" = "#c0caf5";
+      "border-color" = "#7aa2f7";
+      "default-timeout" = 5000;
+    };
+  };
+
+  # ============================================
+  # WALLPAPER
   # ============================================
   systemd.user.services.swaybg = {
     Unit = {
@@ -31,23 +79,6 @@
     Service = {
       Type = "simple";
       ExecStart = "${pkgs.swaybg}/bin/swaybg -m fill -i %h/.local/share/wallpapers/default.png";
-      Restart = "on-failure";
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
-
-  # ============================================
-  # Noctalia Shell (run as a user service)
-  # ============================================
-  systemd.user.services.noctalia-shell = {
-    Unit = {
-      Description = "Noctalia Shell";
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = "${config.programs.noctalia-shell.package}/bin/noctalia-shell";
       Restart = "on-failure";
     };
     Install.WantedBy = [ "graphical-session.target" ];
