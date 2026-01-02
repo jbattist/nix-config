@@ -22,7 +22,7 @@
       
       # Desktop
       fuzzel
-      inputs.matugen.packages.${pkgs.system}.default
+      inputs.matugen.packages.${pkgs.stdenv.hostPlatform.system}.default
       
       # Apps
       vscode obsidian firefox ferdium

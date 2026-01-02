@@ -52,22 +52,19 @@
 
   services.mako = {
     enable = true;
-    font = "Inter 11";
-    width = 350;
-    height = 150;
-    margin = "10";
-    padding = "15";
-    borderSize = 2;
-    borderRadius = 10;
-    backgroundColor = "#1a1b26";
-    textColor = "#c0caf5";
-    borderColor = "#7aa2f7";
-    defaultTimeout = 5000;
-    maxVisible = 5;
-    layer = "overlay";
-    anchor = "top-right";
-    icons = true;
-    maxIconSize = 48;
+    settings = {
+      font = "Inter 11";
+      width = 350;
+      height = 150;
+      margin = "10";
+      padding = "15";
+      "border-size" = 2;
+      "border-radius" = 10;
+      "background-color" = "#1a1b26";
+      "text-color" = "#c0caf5";
+      "border-color" = "#7aa2f7";
+      "default-timeout" = 5000;
+    };
   };
 
   # ============================================

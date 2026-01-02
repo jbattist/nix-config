@@ -20,7 +20,10 @@
       share = true;
     };
 
-    initExtra = ''
+    # Lock in legacy dotdir behavior (home.stateVersion < 26.05)
+    dotDir = config.home.homeDirectory;
+
+    initContent = ''
       [[ -f "${dotfiles}/zshrc/.zshrc" ]] && source "${dotfiles}/zshrc/.zshrc"
       eval "$(zoxide init zsh)"
       bindkey '^[[A' history-search-backward
