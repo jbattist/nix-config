@@ -5,6 +5,8 @@
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    # Load my dotfiles zsh config
+    source ${dotfiles}/zshrc/.zshrc
   };
 
   programs.starship.enable = true;
@@ -23,13 +25,6 @@ xdg.configFile."ghostty/config".source = dotfiles + "/ghostty/config";
 # Starship
 xdg.configFile."starship.toml".source = dotfiles + "/starship/starship.toml";
 
-# Zsh (either replace .zshrc...)
-home.file.".zshrc".source = dotfiles + "/zsh/.zshrc";
-
-# ...or better: source your custom file without replacing .zshrc
-# programs.zsh.initExtra = ''
-#   source ${dotfiles}/zsh/custom.zsh
-# '';
 
 
 }
