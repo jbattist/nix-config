@@ -11,7 +11,6 @@
 
     dotfiles = { url = "github:jbattist/dotfiles"; flake = false; };
 
-    };
   };
 
   outputs = { self, nixpkgs, home-manager, dotfiles, ... }:
