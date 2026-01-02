@@ -2,11 +2,13 @@
 set -euo pipefail
 
 NO_REBUILD=0
+DO_COMMIT=0
 TARGET_HOST=""
 
 for arg in "$@"; do
   case "$arg" in
     --no-rebuild) NO_REBUILD=1 ;;
+    --commit) DO_COMMIT=1 ;;
     *) TARGET_HOST="$arg" ;;
   esac
 done
@@ -34,6 +36,13 @@ if [[ -d "${HOST_DIR}" ]]; then
   exit 1
 fi
 
+# If git repo, ensure clean-ish state is OK (we won't hard fail)
+if git -C "${REPO_ROOT}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  IN_GIT=1
+else
+  IN_GIT=0
+fi
+
 # --- create directories -------------------------------------------------------
 
 echo "==> Creating hosts directory (if needed)"
@@ -48,10 +57,20 @@ HW_SRC="/etc/nixos/hardware-configuration.nix"
 HW_DST="${HOST_DIR}/hardware-configuration.nix"
 
 if [[ -f "${HW_SRC}" ]]; then
-  echo "==> Copying hardware-configuration.nix"
+  echo "==> Copying hardware-configuration.nix from ${HW_SRC}"
   cp -f "${HW_SRC}" "${HW_DST}"
 else
   echo "WARN: ${HW_SRC} not found. You must supply hardware-configuration.nix manually."
+  # Create a placeholder so the import doesn't explode if someone forgets
+  if [[ ! -f "${HW_DST}" ]]; then
+    cat > "${HW_DST}" <<'EOF'
+{ ... }:
+{
+  # Placeholder.
+  # Copy /etc/nixos/hardware-configuration.nix into this file.
+}
+EOF
+  fi
 fi
 
 # --- create default.nix -------------------------------------------------------
@@ -77,14 +96,31 @@ cat > "${HOST_DIR}/default.nix" <<EOF
 }
 EOF
 
-# --- update flake.nix ----------------------------------------------------------
+# --- update flake.nix ---------------------------------------------------------
 
-echo "==> Updating flake.nix nixosConfigurations entry"
+echo "==> Updating flake.nix (<hostname> -> ${TARGET_HOST})"
 
-# Remove any existing <hostname> placeholder safely
-sed -i \
-  -e "s|<hostname>|${TARGET_HOST}|g" \
-  "${REPO_ROOT}/flake.nix"
+# Replace ALL occurrences of <hostname> (both in strings and paths)
+sed -i -e "s|<hostname>|${TARGET_HOST}|g" "${REPO_ROOT}/flake.nix"
+
+# --- git add (and optional commit) --------------------------------------------
+
+if [[ "${IN_GIT}" -eq 1 ]]; then
+  echo "==> Staging new files with git add"
+  git -C "${REPO_ROOT}" add \
+    "flake.nix" \
+    "hosts/${TARGET_HOST}/default.nix" \
+    "hosts/${TARGET_HOST}/hardware-configuration.nix"
+
+  if [[ "${DO_COMMIT}" -eq 1 ]]; then
+    echo "==> Committing changes"
+    git -C "${REPO_ROOT}" commit -m "Add host ${TARGET_HOST}"
+  else
+    echo "==> Changes staged (not committed). Use --commit to auto-commit."
+  fi
+else
+  echo "WARN: Not a git repo (or git unavailable). Skipping git add."
+fi
 
 # --- done ---------------------------------------------------------------------
 
