@@ -163,8 +163,6 @@
       color-scheme = "prefer-dark";
       gtk-theme = "Breeze-Dark";
       icon-theme = "Papirus-Dark";
-      cursor-theme = "breeze_cursors";
-      cursor-size = lib.gvariant.mkInt32 24;
       font-name = "Inter 11";
       monospace-font-name = "JetBrainsMono Nerd Font 10";
     };
