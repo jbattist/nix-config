@@ -2,6 +2,7 @@
 
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  download-buffer-size = 134217728;
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
