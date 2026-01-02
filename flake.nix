@@ -1,5 +1,5 @@
 {
-  description = "Joe's NixOS Configuration - SDDM + Niri + KDE Plasma";
+  description = "Joe's NixOS Configuration (Niri + Plasma 6)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -9,64 +9,73 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Wayland compositor
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Wallpaper / theming palette generator
     matugen = {
       url = "github:InioX/matugen";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dotfiles = {
-      url = "github:jbattist/dotfiles";
-      flake = false;
+    # Desktop shell (provides HM + NixOS modules)
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, niri, matugen, dotfiles, ... }@inputs:
+outputs = inputs@{ self, nixpkgs, home-manager, niri, matugen, noctalia, ... }:
     let
       system = "x86_64-linux";
+      username = "joe";
+
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      specialArgs = {
-        inherit inputs dotfiles;
-        username = "joe";
-        hostname = "nixos";
-      };
-    in
-    {
-      nixosConfigurations = {
-        default = nixpkgs.lib.nixosSystem {
-          inherit system specialArgs;
+
+      # Helper: build a NixOS host using `hosts/<hostname>/default.nix`
+      mkHost = hostname:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+
+          specialArgs = {
+            inherit inputs username hostname;
+          };
+
           modules = [
-            ./configuration.nix
-            /etc/nixos/hardware-configuration.nix  # Load from system path
-            ./desktop.nix
-            ./gaming.nix
-            niri.nixosModules.niri
+            ./hosts/${hostname}/default.nix
+
+            noctalia.nixosModules.default
+
             home-manager.nixosModules.home-manager
             {
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = specialArgs;
-                users.joe = import ./home.nix;
+                extraSpecialArgs = { inherit inputs username hostname; };
+                users.${username} = import ./modules/home/default.nix;
               };
             }
           ];
         };
+    in
+    {
+      # Add new machines by adding another line here:
+      #   crucible-dev = mkHost "crucible-dev";
+      nixosConfigurations = {
+        nixos = mkHost "nixos";
       };
 
-      homeConfigurations = {
-        "joe" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = specialArgs;
-          modules = [ ./home.nix ];
-        };
+      # Optional: allow `home-manager switch --flake .#joe` (useful for non-NixOS too)
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = { inherit inputs username; hostname = "nixos"; };
+        modules = [ ./modules/home/default.nix ];
       };
     };
 }
