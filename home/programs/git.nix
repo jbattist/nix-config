@@ -5,8 +5,8 @@
     enable = true;
     
     # UPDATE THESE
-    userName = "Joe Battistello";
-    userEmail = "joebattistello@hotmail.com";
+    userName = "Joe Battista";
+    userEmail = "your-email@example.com";
     
     extraConfig = {
       init.defaultBranch = "main";
