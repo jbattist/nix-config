@@ -82,7 +82,9 @@ EOF
 echo "==> Updating flake.nix nixosConfigurations entry"
 
 # Remove any existing <hostname> placeholder safely
-sed -i "s/\"<hostname>\"/\"${TARGET_HOST}\"/g" "${REPO_ROOT}/flake.nix"
+sed -i \
+  -e "s|<hostname>|${TARGET_HOST}|g" \
+  "${REPO_ROOT}/flake.nix"
 
 # --- done ---------------------------------------------------------------------
 
