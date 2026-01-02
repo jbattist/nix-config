@@ -55,9 +55,50 @@ else
 EOF
 fi
 
+# --- determine boot mode ------------------------------------------------------
+
+BOOT_MODE="UEFI"
+if [[ ! -d /sys/firmware/efi ]]; then
+  BOOT_MODE="BIOS"
+fi
+echo "==> Detected boot mode: ${BOOT_MODE}"
+
+# For BIOS installs, we MUST know the disk for GRUB.
+# Best-effort: pick the parent disk of the root filesystem device.
+GRUB_DEVICE="/dev/sda"
+if [[ "${BOOT_MODE}" == "BIOS" ]]; then
+  ROOT_SRC="$(findmnt -n -o SOURCE / || true)"
+  if [[ -n "${ROOT_SRC}" ]]; then
+    # e.g. /dev/nvme0n1p2 -> /dev/nvme0n1 ; /dev/sda2 -> /dev/sda
+    PARENT="$(lsblk -no PKNAME "${ROOT_SRC}" 2>/dev/null || true)"
+    if [[ -n "${PARENT}" ]]; then
+      GRUB_DEVICE="/dev/${PARENT}"
+    fi
+  fi
+  echo "==> BIOS mode: using GRUB device guess: ${GRUB_DEVICE}"
+fi
+
 # --- create default.nix -------------------------------------------------------
 
 echo "==> Creating default.nix"
+
+if [[ "${BOOT_MODE}" == "UEFI" ]]; then
+  BOOT_BLOCK=$(cat <<'EOF'
+  # ---- bootloader (UEFI) ----
+  boot.loader.grub.enable = false;            # prevent GRUB assertion
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+EOF
+)
+else
+  BOOT_BLOCK=$(cat <<EOF
+  # ---- bootloader (BIOS / legacy) ----
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "${GRUB_DEVICE}";
+EOF
+)
+fi
 
 cat > "${HOST_DIR}/default.nix" <<EOF
 { config, pkgs, ... }:
@@ -75,56 +116,10 @@ cat > "${HOST_DIR}/default.nix" <<EOF
 
   networking.hostName = "${TARGET_HOST}";
   system.stateVersion = "25.11";
+
+${BOOT_BLOCK}
 }
 EOF
-
-# --- update flake.nix (append host config if missing) -------------------------
-
-echo "==> Ensuring flake.nix contains nixosConfigurations.\"${TARGET_HOST}\""
-
-if grep -q "nixosConfigurations\\.\"${TARGET_HOST}\"" "${FLAKE}"; then
-  echo "==> flake.nix already has host ${TARGET_HOST} (no change)"
-else
-  # Insert a new nixosConfigurations block right after the first existing one.
-  # This assumes your flake has at least one existing nixosConfigurations."<host>" = lib.nixosSystem { ... };
-  awk -v host="${TARGET_HOST}" '
-    BEGIN { inserted=0 }
-    {
-      print $0
-      if (!inserted && $0 ~ /nixosConfigurations\."[^"]*"\s*=\s*lib\.nixosSystem\s*\{/ ) {
-        # After the first host block header, add another sibling host definition
-        # by duplicating the same structure but pointing to ./hosts/<host>/default.nix
-        print ""
-        print "      nixosConfigurations.\"" host "\" = lib.nixosSystem {"
-        print "        inherit system;"
-        print "        specialArgs = { inherit dotfiles; };"
-        print "        modules = ["
-        print "          ./hosts/" host "/default.nix"
-        print "          home-manager.nixosModules.home-manager"
-        print "          {"
-        print "            home-manager.useGlobalPkgs = true;"
-        print "            home-manager.useUserPackages = true;"
-        print "            home-manager.extraSpecialArgs = { inherit dotfiles; };"
-        print "            home-manager.users.joe = import ./modules/home/base.nix;"
-        print "          }"
-        print "        ];"
-        print "      };"
-        inserted=1
-      }
-    }
-    END {
-      if (!inserted) {
-        print ""
-        print "/*"
-        print "ERROR: new-host.sh could not find an existing nixosConfigurations block to copy."
-        print "Add at least one nixosConfigurations.\"<host>\" entry first, then rerun."
-        print "*/"
-      }
-    }
-  ' "${FLAKE}" > "${FLAKE}.tmp"
-
-  mv "${FLAKE}.tmp" "${FLAKE}"
-fi
 
 # --- git add + commit (mandatory) ---------------------------------------------
 
