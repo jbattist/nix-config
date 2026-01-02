@@ -116,7 +116,7 @@
     enableDefaultPackages = true;
     packages = with pkgs; [
       jetbrains-mono inter nerd-fonts.jetbrains-mono
-      noto-fonts noto-fonts-cjk-sans noto-fonts-emoji font-awesome
+      noto-fonts noto-fonts-cjk-sans noto-fonts-color-emoji font-awesome
     ];
     fontconfig.defaultFonts = {
       serif = [ "Noto Serif" ];
