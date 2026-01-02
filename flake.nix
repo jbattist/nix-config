@@ -44,7 +44,7 @@
           inherit system specialArgs;
           modules = [
             ./configuration.nix
-            ./hardware-configuration.nix
+            /etc/nixos/hardware-configuration.nix  # Load from system path
             ./desktop.nix
             ./gaming.nix
             niri.nixosModules.niri
