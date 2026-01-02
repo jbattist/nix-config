@@ -16,4 +16,6 @@
     fastfetch
     git
   ];
+
+  xdg.configFile."ghostty/config".source = dotfiles + "/ghostty/config";
 }
