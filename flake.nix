@@ -9,9 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dotfiles = {
-      url = "github:jbattist/dotfiles";
-      flake = false;
+    dotfiles = { url = "github:jbattist/dotfiles"; flake = false; };
+
     };
   };
 
