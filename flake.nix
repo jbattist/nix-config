@@ -58,6 +58,7 @@ outputs = inputs@{ self, nixpkgs, home-manager, niri, matugen, noctalia, ... }:
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = { inherit inputs username hostname; };
+                backupFileExtension = "hm-backup";
                 users.${username} = import ./modules/home/default.nix;
               };
             }
@@ -68,6 +69,7 @@ outputs = inputs@{ self, nixpkgs, home-manager, niri, matugen, noctalia, ... }:
       # Add new machines by adding another line here:
       #   crucible-dev = mkHost "crucible-dev";
       nixosConfigurations = {
+        crucible-dev = mkHost "crucible-dev";
         nixos = mkHost "nixos";
       };
 

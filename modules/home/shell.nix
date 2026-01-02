@@ -9,6 +9,7 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    dotDir = config.home.homeDirectory;
 
     history = {
       size = 50000;
@@ -16,7 +17,7 @@
       path = "${config.xdg.dataHome}/zsh/history";
     };
 
-    initExtra = ''
+    initContent = ''
       # Quality-of-life defaults
       setopt AUTO_CD
       setopt HIST_IGNORE_ALL_DUPS

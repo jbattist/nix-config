@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "dotfiles": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1767317611,
-        "narHash": "sha256-G0WaP24S+Cwk5qgKNSMwuTDBrQs+Ahi3Gl/UeMX2h4Q=",
-        "owner": "jbattist",
-        "repo": "dotfiles",
-        "rev": "9404e0fda5a91ccf5679803ee500d04141fef201",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jbattist",
-        "repo": "dotfiles",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -147,13 +131,33 @@
         "type": "github"
       }
     },
+    "noctalia": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767373875,
+        "narHash": "sha256-8TG3SROjP6Nk+/I4CIFunRO3/SaFiTtGNyEIAJalKyI=",
+        "owner": "noctalia-dev",
+        "repo": "noctalia-shell",
+        "rev": "79c3799e8b6d60eeaca09d4da39adeab20d49c2f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "noctalia-shell",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
-        "dotfiles": "dotfiles",
         "home-manager": "home-manager",
         "matugen": "matugen",
         "niri": "niri",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "noctalia": "noctalia"
       }
     },
     "systems": {

@@ -7,7 +7,6 @@
   home.packages = with pkgs; [
     fuzzel
     mako
-    swaylock-effects
     wl-clipboard
     cliphist
     grim

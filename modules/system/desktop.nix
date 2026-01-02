@@ -96,7 +96,7 @@
     wayland wayland-utils wl-clipboard wlr-randr grim slurp
     
     # Niri ecosystem
-    fuzzel mako swaylock-effects swaybg
+    fuzzel mako swaybg
     
     # File manager
     nemo nemo-fileroller

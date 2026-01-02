@@ -13,6 +13,6 @@
     inputs.niri.nixosModules.niri
   ];
 
-  networking.hostname = "crucible-dev";
+  networking.hostName = "crucible-dev";
 
 }
