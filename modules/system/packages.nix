@@ -7,5 +7,6 @@
     ghostty
     nemo
     resources
+    tela-icon-theme
   ];
 }

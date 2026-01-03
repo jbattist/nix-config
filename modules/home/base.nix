@@ -3,6 +3,7 @@
 {
   imports = [
     ./shell.nix
+    ./plasma.nix
   ];
 
   home.username = "joe";
