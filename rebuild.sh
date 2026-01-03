@@ -27,7 +27,7 @@ echo "==> Updating flake inputs (including dotfiles)"
 nix flake update 
 
 # Stage lockfile if it changed
-git add flake.lock || true
+sudo git add flake.lock || true
 
 if ! git diff --cached --quiet; then
   echo "==> Committing updated flake.lock"
