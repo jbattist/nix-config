@@ -24,7 +24,7 @@ fi
 # --- update flake locks -------------------------------------------------------
 
 echo "==> Updating flake inputs (including dotfiles)"
-nix flake lock --update-input dotfiles
+nix flake update 
 
 # Stage lockfile if it changed
 git add flake.lock || true

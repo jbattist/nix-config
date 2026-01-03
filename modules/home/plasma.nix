@@ -1,11 +1,15 @@
 { config, pkgs, dotfiles, ... }:
 
 {
-  # KDE/Plasma user-level appearance settings.
-  # Recommended: keep this limited to theme/colors/fonts at first.
-
+  # KDE/Plasma appearance settings
   xdg.configFile."kdeglobals".source =
-    dotfiles + "/plasma/kdeglobals";
+    dotfiles + "/kde/config/kdeglobals";
+  xdg.configFile."kdeglobals".force = true;  # Force overwrite
+
+  # Wallpapers (XDG data, Plasma-friendly)
+  xdg.dataFile."wallpapers".source =
+    dotfiles + "/wallpapers";
+  xdg.dataFile."wallpapers".force = true;  # Force overwrite
 
   # Optional (usually safe, smaller scope than appletsrc)
   # xdg.configFile."plasmarc".source =
@@ -14,9 +18,5 @@
   # Avoid unless you want to fully lock panel/widget layout:
   # xdg.configFile."plasma-org.kde.plasma.desktop-appletsrc".source =
   #   dotfiles + "/kde/config/plasma-org.kde.plasma.desktop-appletsrc";
-
-  # Wallpapers (XDG data, Plasma-friendly)
-  xdg.dataFile."wallpapers".source =
-    dotfiles + "/wallpapers/.local/share/wallpapers";
 
 }
