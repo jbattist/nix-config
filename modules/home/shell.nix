@@ -5,8 +5,12 @@
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    
     # Load my dotfiles zsh config
-    source ${dotfiles}/zshrc/.zshrc
+    initExtraBeforeCompInit = ''
+      source ${dotfiles}/zshrc/.zshrc
+    '';
+    
   };
 
   programs.starship.enable = true;
