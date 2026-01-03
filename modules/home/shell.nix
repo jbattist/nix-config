@@ -30,7 +30,7 @@ xdg.configFile."ghostty/config".source = dotfiles + "/ghostty/.config/ghostty/co
 xdg.configFile."starship.toml".source = dotfiles + "/starship/.config/starship.toml";
 
 # fastfetch
-xdg.configFile."fastfetch.jsonc".source = dotfiles + "/fastfetch/.config/fastfetch/config.jsonc";
+xdg.configFile."fastfetch/config.jsonc".source = dotfiles + "/fastfetch/.config/fastfetch/config.jsonc";
 
 
 }
