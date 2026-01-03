@@ -8,5 +8,6 @@
     nemo
     resources
     tela-icon-theme
+    catppuccin-kde
   ];
 }
