@@ -3,12 +3,12 @@
 {
   # KDE/Plasma appearance settings
   xdg.configFile."kdeglobals".source =
-    dotfiles + "/kde/config/kdeglobals";
+    dotfiles + "/plasma/kdeglobals";
   xdg.configFile."kdeglobals".force = true;  # Force overwrite
 
   # Wallpapers (XDG data, Plasma-friendly)
   xdg.dataFile."wallpapers".source =
-    dotfiles + "/wallpapers";
+    dotfiles + "/wallpapers/.local/share/wallpapers";
   xdg.dataFile."wallpapers".force = true;  # Force overwrite
 
   # Optional (usually safe, smaller scope than appletsrc)
