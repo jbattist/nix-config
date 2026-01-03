@@ -14,4 +14,9 @@
   # Avoid unless you want to fully lock panel/widget layout:
   # xdg.configFile."plasma-org.kde.plasma.desktop-appletsrc".source =
   #   dotfiles + "/kde/config/plasma-org.kde.plasma.desktop-appletsrc";
+
+  # Wallpapers (XDG data, Plasma-friendly)
+  xdg.dataFile."wallpapers".source =
+    dotfiles + "/wallpapers/.local/share/wallpapers";
+
 }
