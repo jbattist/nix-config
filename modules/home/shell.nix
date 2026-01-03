@@ -24,10 +24,10 @@
   ];
 
 # Ghostty
-xdg.configFile."ghostty/config".source = dotfiles + "/ghostty/config";
+xdg.configFile."ghostty/config".source = dotfiles + "/.config/ghostty/config";
 
 # Starship
-xdg.configFile."starship.toml".source = dotfiles + "/starship/starship.toml";
+xdg.configFile."starship.toml".source = dotfiles + "/.config/starship/starship.toml";
 
 
 
