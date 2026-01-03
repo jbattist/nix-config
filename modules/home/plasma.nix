@@ -6,6 +6,13 @@
     dotfiles + "/plasma/kdeglobals";
   xdg.configFile."kdeglobals".force = true;  # Force overwrite
 
+  #KDE Power settings
+    xdg.configFile."powerdevilrc".source =
+    dotfiles + "/plasma/powerdevilrc";
+  xdg.configFile."powerdevilrc".force = true;  # Force overwrite
+
+
+
   # Wallpapers (XDG data, Plasma-friendly)
   xdg.dataFile."wallpapers".source =
     dotfiles + "/wallpapers/.local/share/wallpapers";
