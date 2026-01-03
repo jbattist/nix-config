@@ -24,10 +24,10 @@ fi
 # --- update flake locks -------------------------------------------------------
 
 echo "==> Updating flake inputs (including dotfiles)"
-nix flake update 
+sudo nix flake update 
 
 # Stage lockfile if it changed
-sudo git add flake.lock || true
+git add flake.lock || true
 
 if ! git diff --cached --quiet; then
   echo "==> Committing updated flake.lock"
