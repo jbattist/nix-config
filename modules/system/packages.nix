@@ -9,5 +9,6 @@
     resources
     tela-icon-theme
     catppuccin-kde
+    ferdium
   ];
 }
