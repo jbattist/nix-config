@@ -9,6 +9,8 @@
     ../../modules/system/packages.nix
 
     ../../users/joe.nix
+
+     ../../modules/system/vm.nix   # 👈 VM-only
   ];
 
   networking.hostName = "crucible-dev";
