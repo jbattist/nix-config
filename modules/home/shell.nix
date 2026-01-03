@@ -7,7 +7,7 @@
     syntaxHighlighting.enable = true;
     
     # Load my dotfiles zsh config
-    initExtraBeforeCompInit = ''
+    initContent = ''
       source ${dotfiles}/zshrc/.zshrc
     '';
     
