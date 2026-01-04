@@ -11,6 +11,48 @@ FLAKE="${REPO_ROOT}/flake.nix"
 echo "==> Repo root: ${REPO_ROOT}"
 echo "==> New host:  ${TARGET_HOST}"
 
+# --- update flake.nix with a new hostname ---------------------------------------------------------
+
+add_host_to_flake() {
+  local flake_file="$1"
+  local host="$2"
+
+  # If it already exists, do nothing (idempotent)
+  if grep -qE "nixosConfigurations\\.${host}\\b|${host}\\s*=\\s*nixpkgs\\.lib\\.nixosSystem" "$flake_file"; then
+    echo "==> flake.nix already contains host '${host}', skipping insert"
+    return 0
+  fi
+
+  # Insert the host entry right after: nixosConfigurations = {
+  # This assumes your flake.nix has that line.
+  if ! grep -q "nixosConfigurations = {" "$flake_file"; then
+    echo "ERROR: Could not find 'nixosConfigurations = {' in flake.nix" >&2
+    exit 1
+  fi
+
+  echo "==> Adding '${host}' to flake.nix nixosConfigurations"
+
+  # macOS sed compatibility not required on NixOS, but keep it simple.
+  sed -i "/nixosConfigurations = {/a\\
+\\
+      ${host} = nixpkgs.lib.nixosSystem {\\
+        inherit system;\\
+        specialArgs = { inherit inputs dotfiles; };\\
+        modules = [\\
+          ./hosts/${host}/default.nix\\
+          home-manager.nixosModules.home-manager\\
+          {\\
+            home-manager.useGlobalPkgs = true;\\
+            home-manager.useUserPackages = true;\\
+            home-manager.extraSpecialArgs = { inherit dotfiles; };\\
+            home-manager.users.joe = import ./modules/home/base.nix;\\
+          }\\
+        ];\\
+      };\\
+" "$flake_file"
+}
+
+
 # --- hard requirements -------------------------------------------------------
 
 if [[ ! -f "${FLAKE}" ]]; then
@@ -120,6 +162,9 @@ cat > "${HOST_DIR}/default.nix" <<EOF
 ${BOOT_BLOCK}
 }
 EOF
+
+# --- change the hostname in flake.nix ---------------------------------------
+add_host_to_flake "${REPO_ROOT}/flake.nix" "${TARGET_HOST}"
 
 # --- git add + commit (mandatory) ---------------------------------------------
 
