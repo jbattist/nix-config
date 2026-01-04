@@ -20,11 +20,11 @@
       lib = nixpkgs.lib;
     in
     {
-      nixosConfigurations."crucible-dev" = lib.nixosSystem {
+      nixosConfigurations."crucible" = lib.nixosSystem {
         inherit system;
         specialArgs = { inherit dotfiles; };
         modules = [
-          ./hosts/crucible-dev/default.nix
+          ./hosts/crucible/default.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
