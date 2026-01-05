@@ -7,6 +7,8 @@
     ../../modules/system/base.nix
     ../../modules/system/plasma.nix
     ../../modules/system/packages.nix
+    ../../modules/system/niri.nix
+
 
     ../../users/joe.nix
   ];
