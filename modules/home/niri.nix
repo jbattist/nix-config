@@ -19,6 +19,10 @@ in
     dotfiles + "/niri/.config/niri/config.kdl";
   xdg.configFile."niri/config.kdl".force = true;
 
+  xdg.configFile."niri/noctalia.kdl".source =
+  dotfiles + "/niri/.config/niri/noctalia.kdl";
+  xdg.configFile."niri/noctalia.kdl".force = true;
+
   # --- Noctalia / Quickshell config from your dotfiles ---
   # Noctalia is built on Quickshell :contentReference[oaicite:10]{index=10}
   # Common location is ~/.config/quickshell/...
