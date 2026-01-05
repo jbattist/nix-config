@@ -18,7 +18,6 @@
     xdg-desktop-portal
     python3
     evolution-data-server
-    polkit-kde-agent
     
   ];
 }
