@@ -12,7 +12,7 @@
     gpu-screen-recorder 
     brightnessctl
     cliphist
-    matugen-git
+    matugen
     cava
     wlsunset
     xdg-desktop-portal
