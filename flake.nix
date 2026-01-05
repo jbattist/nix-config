@@ -12,7 +12,6 @@
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.quickshell.follows = "quickshell";
     };
 
 
@@ -35,6 +34,7 @@
         
         modules = [
           ./hosts/crucible/default.nix
+          ./noctalia.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
