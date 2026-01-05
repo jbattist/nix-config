@@ -10,7 +10,6 @@
 
   # Reccommended nby noctalia
   hardware.bluetooth.enable = true;
-  services.power-profiles-daemon.enabled = true;
   services.upower.enable = true;
 
   services.openssh.enable = true;
